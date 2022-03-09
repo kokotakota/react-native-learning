@@ -102,3 +102,15 @@ yarn add react-navigation @react-navigation/native @react-navigation/stack @reac
 ```
 expo install react-native-screens react-native-safe-area-context react-native-gesture-handler
 ```
+
+## UIフレームワーク
+Native Base
+```
+yarn add native-base
+```
+依存関係のあるライブラリをexpoでインストールする
+```
+expo install react-native-svg react-native-safe-area-context
+```
+
+アプリ全体でThemeを参照するために、App.tsxに<NativeBaseProvider>をタグの最上位として置く。
