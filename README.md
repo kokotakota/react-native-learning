@@ -92,3 +92,13 @@ import registerRootComponent from 'expo/build/launch/registerRootComponent'
 // エントリポイントとなるコンポーネントを渡す
 registerRootComponent(App)
 ```
+
+## ナビゲーション
+React Navigation
+```
+yarn add react-navigation @react-navigation/native @react-navigation/stack @react-navigation/bottom-tabs
+```
+依存関係のあるライブラリをexpoでインストールする
+```
+expo install react-native-screens react-native-safe-area-context react-native-gesture-handler
+```
