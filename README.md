@@ -57,3 +57,38 @@ defaultConfig.resolver.blacklistRE = exclusionList([
 
 module.exports = defaultConfig
 ```
+
+## srcディレクトリ設定
+- srcディレクトリを作成しApp.tsxを移動
+- package.jsonのmainを"src/App.tsx"に書き換え
+- srcをルートとしたインポートを可能にする
+  - babel-plugin-root-importを追加
+    - ```yarn add --dev babel-plugin-root-import```
+  - babel.config.jsに以下を記述
+```
+plugins: [
+  [
+    'babel-plugin-root-import',
+    {
+      rootPathPrefix: '~',
+      rootPathSuffix: 'src',
+    }
+  ]
+]
+```
+  - tsconfig.jsonに以下を記述
+```
+"compilerOptions": {
+  "baseUrl": "./src",
+  "paths": {
+    "~/*": ["*"]
+  }
+}
+```
+  - src/App.tsxに以下を記述
+```
+import registerRootComponent from 'expo/build/launch/registerRootComponent'
+・・・
+// エントリポイントとなるコンポーネントを渡す
+registerRootComponent(App)
+```
