@@ -4,6 +4,9 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { AuthRootParams } from '~/components/auth/Authenticator'
 import { StackActions } from '@react-navigation/native'
 
+import { useDispatch } from 'react-redux'
+import { userSlice } from '~/store/user'
+
 import { StackScreenProps } from '@react-navigation/stack'
 type Props = StackScreenProps<
   AuthRootParams,
@@ -17,6 +20,7 @@ interface Inputs {
 export default function ConfirmEmail({ navigation, route }: Props) {
   const [ loading, setLoading ] = useState<boolean>(false)
   const { control, handleSubmit, formState: { errors }, clearErrors, setError } = useForm<Inputs>()
+  const dispatch = useDispatch()
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setLoading(true)
@@ -24,6 +28,8 @@ export default function ConfirmEmail({ navigation, route }: Props) {
       // メールアドレス認証処理
       const { email, password } = route.params
       await new Promise(resolve => setTimeout(resolve, 500))
+      const user = { id: email, name: 'テスト' }
+      dispatch(userSlice.actions.setUser(user))
       navigation.dispatch(StackActions.popToTop())
     } catch (e: any) {
       // コードが間違っている場合

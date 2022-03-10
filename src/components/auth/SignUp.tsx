@@ -46,7 +46,7 @@ export default function SignUp({ navigation }: Props) {
           setError('email', { type: "manual", message: 'すでに登録されているメールアドレスです' })
           break
         default:
-          throw(e)
+          throw e
       }
     } finally {
       setLoading(false)

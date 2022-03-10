@@ -1,5 +1,9 @@
 import registerRootComponent from 'expo/build/launch/registerRootComponent'
 
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+import { store, persistor } from '~/store'
+
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 const Tab = createBottomTabNavigator()
@@ -13,7 +17,7 @@ import { AntDesign } from '@expo/vector-icons'
 import Home from '~/screens/Home'
 import Search from '~/screens/Search'
 import Account from '~/screens/Account'
-import Authenticator from '~/components/auth/Authenticator'
+import AuthenticatorModal from '~/components/auth/AuthenticatorModal'
 
 const tabs = [
   {
@@ -45,6 +49,7 @@ function BottomNavigation () {
     >
       {tabs.map((tab) => (
         <Tab.Screen
+          key={tab.name}
           name={tab.name}
           component={tab.elm}
           options={{
@@ -56,7 +61,8 @@ function BottomNavigation () {
     </Tab.Navigator>
   )
 }
-export default function App () {
+
+function App () {
   return (
     <NativeBaseProvider>
       <NavigationContainer>
@@ -65,7 +71,6 @@ export default function App () {
         >
           <Stack.Group>
             <Stack.Screen
-            
               name="App"
               component={BottomNavigation}
             />
@@ -73,7 +78,7 @@ export default function App () {
           <Stack.Group screenOptions={{ presentation: 'modal' }}>
             <Stack.Screen
               name="Authenticator"
-              component={Authenticator}
+              component={AuthenticatorModal}
             />
           </Stack.Group>
         </Stack.Navigator>
@@ -82,4 +87,15 @@ export default function App () {
   )
 }
 
-registerRootComponent(App)
+function AppWrapper (context: any) {
+  return (
+    <Provider store={store}>
+      <PersistGate loading={<></>} persistor={persistor}>
+        <App {...context} />
+      </PersistGate>
+    </Provider>
+  )
+}
+
+registerRootComponent(AppWrapper)
+export default AppWrapper

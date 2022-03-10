@@ -113,4 +113,12 @@ yarn add native-base
 expo install react-native-svg react-native-safe-area-context
 ```
 
-アプリ全体でThemeを参照するために、App.tsxに<NativeBaseProvider>をタグの最上位として置く。
+アプリ全体でThemeを参照するために、App.tsxにNativeBaseProviderを置く
+
+## 状態管理、永続化
+Redux Toolkit、Persist
+```
+yarn add @reduxjs/toolkit react-redux redux-persist @react-native-async-storage/async-storage
+```
+
+アプリ全体でstoreを参照するために、App.tsxにReduxのProviderを置く

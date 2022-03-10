@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { Center, Heading, VStack, FormControl, Input, Button, Link } from 'native-base'
 
+import { useDispatch } from 'react-redux'
+import { userSlice } from '~/store/user'
+
 import { NavigationParams, NavigationScreenProp, NavigationState,} from 'react-navigation'
 interface Props {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -29,11 +32,14 @@ interface FormProps {
 export default function SignIn ({ navigation }: Props) {
   const [ loading, setLoading ] = useState<boolean>(false)
   const { control, handleSubmit, formState: { errors } } = useForm<Inputs>()
+  const dispatch = useDispatch()
 
   const  onSubmit: SubmitHandler<Inputs> = async (data) => {
     setLoading(true)
     try {
       // ログイン処理
+      const user = { id: data.email, name: 'テスト' }
+      dispatch(userSlice.actions.setUser(user))
       await new Promise(resolve => setTimeout(resolve, 500))
     } catch (e: any) {
       switch (e.code) {
@@ -46,7 +52,7 @@ export default function SignIn ({ navigation }: Props) {
           alert('IDまたはパスワードが間違っています')
           break
         default:
-          throw(e)
+          throw e
       }
     } finally {
       setLoading(false)
@@ -139,7 +145,7 @@ export default function SignIn ({ navigation }: Props) {
           パスワードを忘れた場合はこちら
         </Link>
         <Link
-          mt="8"
+          mt="6"
           _text={{
             color: "darkBlue.500",
             fontSize: "sm"
