@@ -1,8 +1,6 @@
-import { Text, View } from 'react-native'
+import Authenticator from '~/components/auth/Authenticator'
 export default function Account () {
   return (
-    <View>
-      <Text>アカウント</Text>
-    </View>
+    <Authenticator />
   )
 }
