@@ -1,8 +1,9 @@
-import { Text, View } from 'react-native'
+import { Text } from 'react-native'
+import { Center } from 'native-base'
 export default function Search () {
   return (
-    <View>
+    <Center flex={1} px="3">
       <Text>検索</Text>
-    </View>
+    </Center>
   )
 }

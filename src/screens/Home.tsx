@@ -1,13 +1,24 @@
-import { createStackNavigator } from '@react-navigation/stack'
-const Stack = createStackNavigator()
+import { useState } from 'react'
+import { Text, Modal } from 'react-native'
+import { Center, Button } from 'native-base'
+import Authenticator from '~/components/auth/Authenticator'
 
-import Test from '~/components/Test'
+import { NavigationParams, NavigationScreenProp, NavigationState,} from 'react-navigation'
+interface Props {
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+}
 
-export default function Home () {
+export default function Home ({ navigation }: Props) {
+  const [ modal, setModal ] = useState<boolean>(false)
   return (
-    <Stack.Navigator initialRouteName="Test">
-      <Stack.Screen name="Test1" component={Test} options={{ title: 'テスト' }}/>
-      <Stack.Screen name="Test2" component={Test} options={{ title: 'テスト' }}/>
-    </Stack.Navigator>
+    <Center flex={1} px="3">
+      <Text>ホーム</Text>
+      <Button
+        mt="8"
+        onPress={() => navigation.navigate('Authenticator')}
+      >
+        ログイン
+      </Button>
+    </Center>
   )
 }
