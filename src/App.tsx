@@ -17,7 +17,7 @@ import { AntDesign } from '@expo/vector-icons'
 import Home from '~/screens/Home'
 import Search from '~/screens/Search'
 import Account from '~/screens/Account'
-import AuthenticatorModal from '~/components/auth/AuthenticatorModal'
+import AuthenticatorModalProvider from '~/components/auth/AuthenticatorModal'
 
 const tabs = [
   {
@@ -40,48 +40,28 @@ const tabs = [
   },
 ]
 
-
-function BottomNavigation () {
-  return (
-    <Tab.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName={tabs[0].name}
-    >
-      {tabs.map((tab) => (
-        <Tab.Screen
-          key={tab.name}
-          name={tab.name}
-          component={tab.elm}
-          options={{
-            tabBarLabel: tab.label,
-            tabBarIcon: () => tab.icon
-          }}
-        />
-      ))}
-    </Tab.Navigator>
-  )
-}
-
 function App () {
   return (
     <NativeBaseProvider>
       <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Group>
-            <Stack.Screen
-              name="App"
-              component={BottomNavigation}
-            />
-          </Stack.Group>
-          <Stack.Group screenOptions={{ presentation: 'modal' }}>
-            <Stack.Screen
-              name="Authenticator"
-              component={AuthenticatorModal}
-            />
-          </Stack.Group>
-        </Stack.Navigator>
+        <AuthenticatorModalProvider>
+          <Tab.Navigator
+            screenOptions={{ headerShown: false }}
+            initialRouteName={tabs[0].name}
+          >
+            {tabs.map((tab) => (
+              <Tab.Screen
+                key={tab.name}
+                name={tab.name}
+                component={tab.elm}
+                options={{
+                  tabBarLabel: tab.label,
+                  tabBarIcon: () => tab.icon
+                }}
+              />
+            ))}
+          </Tab.Navigator>
+        </AuthenticatorModalProvider>
       </NavigationContainer>
     </NativeBaseProvider>
   )

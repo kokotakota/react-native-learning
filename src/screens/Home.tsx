@@ -1,16 +1,15 @@
+import { useState } from 'react'
 import { Text } from 'react-native'
-import { Center, Button, VStack } from 'native-base'
+import { Center, Button, VStack, Box } from 'native-base'
 import { RootState } from '~/store'
 import { useSelector } from 'react-redux'
 import ShareButton from '~/components/ShareButton'
+import { useAuthenticatorModal } from '~/components/auth/AuthenticatorModal'
 
-import { NavigationParams, NavigationScreenProp, NavigationState,} from 'react-navigation'
-interface Props {
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
-}
-
-export default function Home ({ navigation }: Props) {
+export default function Home () {
   const user = useSelector((state: RootState) => state.user)
+  const openAuthenticatorModal = useAuthenticatorModal()
+
   return (
     <Center flex={1} px="3">
       <VStack width="90%" mx="4">
@@ -18,12 +17,14 @@ export default function Home ({ navigation }: Props) {
         {!user.id && (
           <Button
             mt="8"
-            onPress={() => navigation.navigate('Authenticator')}
+            onPress={openAuthenticatorModal}
           >
             ログイン
           </Button>
         )}
-        <ShareButton />
+        <Box mt="8">
+          <ShareButton />
+        </Box>
       </VStack>
     </Center>
   )
