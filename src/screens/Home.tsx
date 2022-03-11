@@ -1,14 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Text } from 'react-native'
 import { Center, Button, VStack, Box } from 'native-base'
 import { RootState } from '~/store'
 import { useSelector } from 'react-redux'
 import ShareButton from '~/components/ShareButton'
+import { useImagesPickerModal } from '~/components/imagesPicker/ImagesPickerModal'
 import { useAuthenticatorModal } from '~/components/auth/AuthenticatorModal'
 
 export default function Home () {
   const user = useSelector((state: RootState) => state.user)
   const openAuthenticatorModal = useAuthenticatorModal()
+  const [pickedImages, setPickedImages] = useState<MediaLibrary.Asset[]>([])
+  const openImagesPickerModal = useImagesPickerModal(setPickedImages)
+
+  useEffect(() => {
+    console.log(pickedImages)
+  }, [pickedImages])
 
   return (
     <Center flex={1} px="3">
@@ -25,6 +32,12 @@ export default function Home () {
         <Box mt="8">
           <ShareButton />
         </Box>
+        <Button
+          mt="8"
+          onPress={openImagesPickerModal}
+        >
+          画像選択
+        </Button>
       </VStack>
     </Center>
   )

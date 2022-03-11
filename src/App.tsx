@@ -18,6 +18,7 @@ import Home from '~/screens/Home'
 import Search from '~/screens/Search'
 import Account from '~/screens/Account'
 import AuthenticatorModalProvider from '~/components/auth/AuthenticatorModal'
+import ImagesPickerModalProvider from '~/components/imagesPicker/ImagesPickerModal'
 
 const tabs = [
   {
@@ -44,24 +45,26 @@ function App () {
   return (
     <NativeBaseProvider>
       <NavigationContainer>
-        <AuthenticatorModalProvider>
-          <Tab.Navigator
-            screenOptions={{ headerShown: false }}
-            initialRouteName={tabs[0].name}
-          >
-            {tabs.map((tab) => (
-              <Tab.Screen
-                key={tab.name}
-                name={tab.name}
-                component={tab.elm}
-                options={{
-                  tabBarLabel: tab.label,
-                  tabBarIcon: () => tab.icon
-                }}
-              />
-            ))}
-          </Tab.Navigator>
-        </AuthenticatorModalProvider>
+        <ImagesPickerModalProvider>
+          <AuthenticatorModalProvider>
+            <Tab.Navigator
+              screenOptions={{ headerShown: false }}
+              initialRouteName={tabs[0].name}
+            >
+              {tabs.map((tab) => (
+                <Tab.Screen
+                  key={tab.name}
+                  name={tab.name}
+                  component={tab.elm}
+                  options={{
+                    tabBarLabel: tab.label,
+                    tabBarIcon: () => tab.icon
+                  }}
+                />
+              ))}
+            </Tab.Navigator>
+          </AuthenticatorModalProvider>
+        </ImagesPickerModalProvider>
       </NavigationContainer>
     </NativeBaseProvider>
   )

@@ -13,17 +13,15 @@ export default function Profile() {
   }
 
   return (
-    <>
-      <Center flex={1} px="3">
-        <VStack width="90%" mx="4">
-          <Text alignSelf="center">
-            ユーザーID: {user.id}
-          </Text>
-          <Button mt="8" onPress={signOut}>
-            ログアウト
-          </Button>
-        </VStack>
-      </Center>
-    </>
+    <Center flex={1} px="3">
+      <VStack width="90%" mx="4">
+        <Text alignSelf="center">
+          ユーザーID: {user.id}
+        </Text>
+        <Button mt="8" onPress={signOut}>
+          ログアウト
+        </Button>
+      </VStack>
+    </Center>
   )
 }

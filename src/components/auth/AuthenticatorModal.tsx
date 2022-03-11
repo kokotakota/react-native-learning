@@ -1,10 +1,8 @@
-import { FC, useEffect } from 'react';
+import { useEffect } from 'react'
 import Authenticator from '~/components/auth/Authenticator'
 import { RootState } from '~/store'
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
-
-const SCREEN_NAME_AUTHENTICATOR = 'Authenticator'
 
 function AuthenticatorWrapper () {
   const navigation = useNavigation()
@@ -20,8 +18,11 @@ function AuthenticatorWrapper () {
   )
 }
 
+import { FC } from 'react'
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack'
+const SCREEN_NAME_AUTHENTICATOR = 'Authenticator'
+
 /* モーダルを使用するためのプロバイダ */
-import { createStackNavigator } from '@react-navigation/stack'
 const Stack = createStackNavigator()
 const AuthenticatorModalProvider: FC = ({ children }) => {
   const _children = () => <>{children}</>
@@ -47,7 +48,6 @@ const AuthenticatorModalProvider: FC = ({ children }) => {
 export default AuthenticatorModalProvider
 
 /* モーダルを表示する関数をhooksで提供 */
-import { StackNavigationProp } from '@react-navigation/stack'
 type ParamList = {
   [SCREEN_NAME_AUTHENTICATOR]: undefined
 }
