@@ -32,7 +32,7 @@ const AuthenticatorModalProvider: FC = ({ children }) => {
     >
       <Stack.Group>
         <Stack.Screen
-          name="App"
+          name={`Not${SCREEN_NAME_AUTHENTICATOR}`}
           component={_children}
         />
       </Stack.Group>

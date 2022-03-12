@@ -27,7 +27,7 @@ export interface FlatListProps {
 }
 export default function ImagesPickerFlatList ({ images, onEndReached, pickImage }: FlatListProps) {
   const keyExtractor = useCallback(
-    (item, index) => item.uri,
+    item => item.uri,
     [images]
   )
   const renderItem = useCallback(

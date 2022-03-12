@@ -13,7 +13,7 @@ export interface ThumbnailProps {
   pickImage: (index: number) => void
 }
 export default function ImagesPickerThumbnail ({ image, index, pickImage }: ThumbnailProps) {
-  const [picked, setPicked] = useState<boolean>(()=>false)
+  const [picked, setPicked] = useState<boolean>(false)
   const { colors } = useTheme()
 
   const pick = useCallback(() => {
@@ -33,9 +33,9 @@ export default function ImagesPickerThumbnail ({ image, index, pickImage }: Thum
         source={{
           uri: image.uri
         }}
-        style={{ width: '100%', height: 98, resizeMode: "contain", borderColor: "primary.500"  }}
-        borderWidth={picked && 1}
-        borderColor={colors.primary['500']}
+        style={{ width: '100%', height: 98, resizeMode: "contain"  }}
+        border-width={picked && 1}
+        border-color={colors.primary['500']}
       />
       {picked && (
         <Icon

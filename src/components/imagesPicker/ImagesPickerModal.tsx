@@ -1,7 +1,7 @@
-import { useState, useEffect, memo, useCallback } from 'react'
+import { useState, useEffect, memo, useCallback, Dispatch, SetStateAction } from 'react'
 import * as MediaLibrary from 'expo-media-library'
 import { HStack, Button } from 'native-base'
-import { SafeAreaView, Text } from 'react-native'
+import { SafeAreaView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import AlbumSelector from '~/components/imagesPicker/AlbumSelector'
 import ImagesPickerFlatList, { FlatListProps } from '~/components/imagesPicker/ImagesPickerFlatList'
@@ -18,33 +18,38 @@ const MemoImagesFlatList = memo<FlatListProps>(({ images, onEndReached, pickImag
 })
 
 /* イメージピッカー */
-const SCREEN_NAME_IMAGES_PICKER = 'ImagesPicker'
-type onPicked = (images: MediaLibrary.Asset[]) => {}
+const SCREEN_NAME_IMAGES_PICKER = 'ImagesPicker' as const
+export type PickedImages = { uri: string, fileName: string } []
+export type OnPick = Dispatch<SetStateAction<PickedImages>>
 type ParamList = {
-  [SCREEN_NAME_IMAGES_PICKER]: { onPicked: onPicked }
+  [SCREEN_NAME_IMAGES_PICKER]: { onPick: OnPick }
 }
 type Props = StackScreenProps<
   ParamList,
-  SCREEN_NAME_IMAGES_PICKER
+  typeof SCREEN_NAME_IMAGES_PICKER
 >
 function ImagesPicker ({ route }: Props) {
   const navigation = useNavigation()
-  const [selectedAlbum, setSelectedAlbum] = useState<string>()
+  const [selectedAlbum, setSelectedAlbum] = useState<string>('')
   const [pickedImages, setPickedImages] = useState<number[]>([])
   const [images, setImages] = useState<MediaLibrary.Asset[]>([])
   const [pageInfo, setPageInfo] = useState<{ hasNextPage: boolean, endCursor: string }>()
 
-  // アルバムを変更したとき
+  // 初期表示時、アルバムを変更時
   useEffect(() => {
     getFirstImages()
     setPickedImages([])
   }, [selectedAlbum])
 
   const getFirstImages = async () => {
-    await getPermissionStatus()
+    const granted = await isGrantedMediaLibrary()
+    if (!granted) {
+      return
+    }
     await getImages()
   }
 
+  // 画像読み込み
   const getImages = async (endCursor: string | undefined = undefined) => {
     const params: MediaLibrary.AssetsOptions = {
       mediaType: ['photo'],
@@ -63,14 +68,27 @@ function ImagesPicker ({ route }: Props) {
   }
 
   // 端末内画像へのアクセス許可
-  const getPermissionStatus = async (): Promise<void> => {
+  const isGrantedMediaLibrary = async (): Promise<boolean> => {
     const { status } = await MediaLibrary.requestPermissionsAsync()
-    status !== 'granted' &&
-      alert('カメラロールへのアクセスを許可してください')
+    return status === 'granted'
   }
 
+  // 次の画像を読み込み
+  const getNextImages = useCallback(
+    async () => {
+      if (!pageInfo || !pageInfo.hasNextPage) return
+      getImages(pageInfo.endCursor)
+    },
+    [pageInfo]
+  )
+  
+  // 保存
   const save = () => {
-    route.params.onPicked(pickedImages.map(index => images[index]))
+    const picked: PickedImages = pickedImages.map(index => ({
+      uri: images[index].uri,
+      fileName: images[index].filename
+    }))
+    route.params.onPick(picked)
     closeModal()
   }
 
@@ -78,6 +96,7 @@ function ImagesPicker ({ route }: Props) {
     navigation.goBack()
   }
 
+  // 画像選択
   const pickImage = useCallback(
     (index: number) => {
       setPickedImages((prev) => {
@@ -93,14 +112,6 @@ function ImagesPicker ({ route }: Props) {
       })
     },
     []
-  )
-
-  const getNextImages = useCallback(
-    async () => {
-      if (!pageInfo || !pageInfo.hasNextPage) return
-      getImages(pageInfo.endCursor)
-    },
-    [pageInfo]
   )
 
   return (
@@ -140,7 +151,7 @@ const ImagesPickerModalProvider: FC = ({ children }) => {
     >
       <Stack.Group>
         <Stack.Screen
-          name="App"
+          name={`Not${SCREEN_NAME_IMAGES_PICKER}`}
           component={_children}
         />
       </Stack.Group>
@@ -156,8 +167,13 @@ const ImagesPickerModalProvider: FC = ({ children }) => {
 export default ImagesPickerModalProvider
 
 /* モーダルを表示する関数をhooksで提供 */
-export function useImagesPickerModal (onPicked: onPicked) {
+// 関数をパラメータで渡すとでる警告を非表示
+import { LogBox } from 'react-native'
+LogBox.ignoreLogs([
+ 'Non-serializable values were found in the navigation state',
+])
+export function useImagesPickerModal (onPick: OnPick) {
   const navigation = useNavigation<StackNavigationProp<ParamList>>()
-  const openImagesPickerModal = () => navigation.navigate(SCREEN_NAME_IMAGES_PICKER, { onPicked })
+  const openImagesPickerModal = () => navigation.navigate(SCREEN_NAME_IMAGES_PICKER, { onPick })
   return openImagesPickerModal
 }

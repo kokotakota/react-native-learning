@@ -4,17 +4,22 @@ import * as MediaLibrary from 'expo-media-library'
 import { Select, CheckIcon } from 'native-base'
 interface AlbumSelectorProps {
   selectedAlbum: string
-  setSelectedAlbum: (value: string, ) => {}
+  setSelectedAlbum: (value: string, ) => void
 }
 
 export default function AlbumSelector ({ selectedAlbum, setSelectedAlbum }: AlbumSelectorProps) {
-  const [selectItems, setSelectItems] = useState<[]>([])
+  const [selectItems, setSelectItems] = useState<{ id: string, title: string }[]>([])
 
   useEffect(() => {
     getAlbums()
   }, [])
 
   const getAlbums = async () => {
+    const granted = await isGrantedMediaLibrary()
+    if (!granted) {
+      alert('カメラロールへのアクセスを許可してください')
+      return
+    }
     const albums = await MediaLibrary.getAlbumsAsync()
     const items = [
       { id: '', title: 'すべての画像' },
@@ -22,6 +27,12 @@ export default function AlbumSelector ({ selectedAlbum, setSelectedAlbum }: Albu
     ]
     setSelectItems(items)
     setSelectedAlbum('')
+  }
+
+  // 端末内画像へのアクセス許可
+  const isGrantedMediaLibrary = async (): Promise<boolean> => {
+    const { status } = await MediaLibrary.requestPermissionsAsync()
+    return status === 'granted'
   }
 
   return (
