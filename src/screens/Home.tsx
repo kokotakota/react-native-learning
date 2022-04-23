@@ -4,6 +4,7 @@ import { Center, Button, VStack, Box } from 'native-base'
 import { RootState } from '~/store'
 import { useSelector } from 'react-redux'
 import ShareButton from '~/components/ShareButton'
+import NotificationButton from '~/components/NotificationButton'
 import { useImagesPickerModal, PickedImages } from '~/components/imagesPicker/ImagesPickerModal'
 import { useAuthenticatorModal } from '~/components/auth/AuthenticatorModal'
 
@@ -38,6 +39,9 @@ export default function Home () {
         >
           画像選択
         </Button>
+        <Box mt="8">
+          <NotificationButton />
+        </Box>
       </VStack>
     </Center>
   )
