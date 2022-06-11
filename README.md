@@ -58,6 +58,11 @@ defaultConfig.resolver.blacklistRE = exclusionList([
 module.exports = defaultConfig
 ```
 
+※amplifyの機能を使うときに必要なライブラリが足りないと言われるので以下をインストールしておく
+```
+npm install @react-native-community/netinfo
+```
+
 ## srcディレクトリ設定
 - srcディレクトリを作成しApp.tsxを移動
 - package.jsonのmainを"src/App.tsx"に書き換え
